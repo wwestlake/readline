@@ -20,6 +20,29 @@ namespace ConsoleApplication
 
             input = ReadLine.ReadPassword("Enter Password> ");
             Console.WriteLine(input);
+
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send(new ConsoleKeyInfo('\n', ConsoleKey.Enter, false, false, false));
+
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send("This is a slow string being typed\n", 500);
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send(ConsoleKey.UpArrow);
+            //ReadLine.Send();
+
+            Console.ReadKey(true);
         }
     }
 

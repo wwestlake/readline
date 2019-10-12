@@ -1,7 +1,7 @@
 ﻿using Internal.ReadLine;
 using Internal.ReadLine.Abstractions;
-
 using System.Collections.Generic;
+using System.Threading;
 
 namespace System
 {
@@ -46,13 +46,47 @@ namespace System
             return GetText(keyHandler);
         }
 
+        private static Queue<ConsoleKeyInfo> _queue = new Queue<ConsoleKeyInfo>();
+
+        public static void Send(ConsoleKeyInfo key) => _queue.Enqueue( key );
+
+        public static void Send(ConsoleKey key)
+        {
+            var ch = (char)key;
+            Send(new ConsoleKeyInfo(ch, key, false, false, false));
+        }
+
+        public static void Send(char ch) => Send((ConsoleKey)ch);
+
+        public static void Send(string str, int delay = 0)
+        {
+            foreach (var ch in str)
+            {
+                Send(ch);
+                if (delay > 0) Thread.Sleep(delay);
+            }
+        }
+
+        public static void Send() => Send('\n');
+
+        private static ConsoleKeyInfo TimedReadKey(bool intercept = false)
+        {
+            while (true)
+            {
+                if (_queue.Count > 0) return _queue.Dequeue();
+                if (Console.KeyAvailable) return Console.ReadKey(intercept);
+                Thread.Sleep(100);
+            }
+        }
+
+
         private static string GetText(KeyHandler keyHandler)
         {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            ConsoleKeyInfo keyInfo = TimedReadKey(true);
             while (keyInfo.Key != ConsoleKey.Enter)
             {
                 keyHandler.Handle(keyInfo);
-                keyInfo = Console.ReadKey(true);
+                keyInfo = TimedReadKey(true);
             }
 
             Console.WriteLine();
