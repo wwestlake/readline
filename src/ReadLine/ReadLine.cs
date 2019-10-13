@@ -46,9 +46,16 @@ namespace System
             return GetText(keyHandler);
         }
 
+        private static object locker = new object();
         private static Queue<ConsoleKeyInfo> _queue = new Queue<ConsoleKeyInfo>();
 
-        public static void Send(ConsoleKeyInfo key) => _queue.Enqueue( key );
+        public static void Send(ConsoleKeyInfo key)
+        {
+            lock (locker)
+            {
+                _queue.Enqueue(key);
+            }
+        }
 
         public static void Send(ConsoleKey key)
         {
@@ -67,15 +74,21 @@ namespace System
             }
         }
 
-        public static void Send() => Send('\n');
+        public static void Send()
+        {
+            Send(new ConsoleKeyInfo('\n', ConsoleKey.Enter, false, false, false));
+        }
 
         private static ConsoleKeyInfo TimedReadKey(bool intercept = false)
         {
             while (true)
             {
-                if (_queue.Count > 0) return _queue.Dequeue();
+                lock (locker)
+                {
+                    if (_queue.Count > 0) return _queue.Dequeue();
+                }
                 if (Console.KeyAvailable) return Console.ReadKey(intercept);
-                Thread.Sleep(100);
+                Thread.Sleep(10);
             }
         }
 

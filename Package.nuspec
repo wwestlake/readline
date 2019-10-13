@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LagDaemon.ReadLine</id>
+    <version>2.0.2</version>
+    <authors>Toni Solarin-Sodara, William W. Westlake</authors>
+    <owners>Copyright (c) 2017 Toni Solarin-Sodara</owners>
+    <licenseUrl>https://github.com/wwestlake/readline/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/wwestlake/readline</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A better ReadLine utilitity, a fork of ReadLine by Toni Solarin-Sodara</description>
+    <releaseNotes>Added ability to push characters into the readline input stream.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>gnu, console, shell, readline, cui</tags>
+
+  </metadata>
+  <files>
+    <file src="E:\Videos\FSharp MUD Course\Utilities\src\ReadLine\bin\Debug\netstandard2.0\ReadLine.dll"
+          target="lib\ReadLine.dll" 
+    />
+  </files>
+</package>
