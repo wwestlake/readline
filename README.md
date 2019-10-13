@@ -6,6 +6,8 @@
 ReadLine is a [GNU Readline](https://en.wikipedia.org/wiki/GNU_Readline) like library built in pure C#. It can serve as a drop in replacement for the inbuilt `Console.ReadLine()` and brings along
 with it some of the terminal goodness you get from unix shells, like command history navigation and tab auto completion.
 
+This version allows inserting text into the queue as though typed by the user.
+
 It is cross platform and runs anywhere .NET is supported, targeting `netstandard1.3` means that it can be used with .NET Core as well as the full .NET Framework.
 
 ## Shortcut Guide
@@ -83,6 +85,31 @@ ReadLine.HistoryEnabled = false;
 
 _Note: History information is persisted for an entire application session. Also, calls to `ReadLine.Read()` automatically adds the console input to history_
 
+### Inserting characters into the queue
+```csharp
+
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send(new ConsoleKeyInfo('\n', ConsoleKey.Enter, false, false, false));
+
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send("This is a slow string being typed\n", 500);
+            System.Threading.Tasks.Task.Run(() => {
+                var a = ReadLine.Read("From Task >");
+                Console.WriteLine(a);
+            });
+            System.Threading.Thread.Sleep(1000);
+            ReadLine.Send(ConsoleKey.UpArrow); // shows history if available
+
+
+```
 ### Auto-Completion
 
 ```csharp
